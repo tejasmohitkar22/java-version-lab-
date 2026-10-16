@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#172554">
+    <title>Java 9–25 Learning Tracker | Java + Spring Boot</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f5f7fb;
+            --panel: #fff;
+            --ink: #182230;
+            --muted: #667085;
+            --line: #e4e7ec;
+            --blue: #2457c5;
+            --shadow: 0 8px 24px rgba(16, 24, 40, .06)
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font: 15px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif
+        }
+
+        header {
+            background: linear-gradient(120deg, #14234b, #2457c5);
+            color: #fff;
+            padding: 32px 20px 28px
+        }
+
+        .wrap {
+            max-width: 1150px;
+            margin: auto
+        }
+
+        .eyebrow {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            opacity: .8;
+            font-weight: 700
+        }
+
+        h1 {
+            font-size: clamp(26px, 4vw, 38px);
+            line-height: 1.15;
+            margin: 8px 0 10px
+        }
+
+        header p {
+            max-width: 780px;
+            margin: 0;
+            color: #e4eaff
+        }
+
+        main {
+            max-width: 1150px;
+            margin: 22px auto;
+            padding: 0 16px 48px
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 16px
+        }
+
+        .stat,
+        .panel,
+        .release {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            box-shadow: var(--shadow)
+        }
+
+        .stat {
+            padding: 15px
+        }
+
+        .stat .num {
+            font-size: 26px;
+            font-weight: 750;
+            letter-spacing: -.04em
+        }
+
+        .stat .label {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .panel {
+            padding: 16px;
+            margin-bottom: 16px
+        }
+
+        .toolbar {
+            display: grid;
+            grid-template-columns: minmax(200px, 1fr) 180px 180px auto;
+            gap: 10px;
+            align-items: end
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            margin-bottom: 5px
+        }
+
+        input[type=search],
+        select {
+            width: 100%;
+            padding: 10px 11px;
+            border: 1px solid #cfd5df;
+            border-radius: 9px;
+            background: #fff;
+            color: var(--ink);
+            font: inherit
+        }
+
+        button {
+            font: inherit;
+            cursor: pointer;
+            border: 1px solid #cfd5df;
+            background: #fff;
+            color: var(--ink);
+            padding: 10px 12px;
+            border-radius: 9px;
+            font-weight: 650
+        }
+
+        button.primary {
+            background: var(--blue);
+            color: white;
+            border-color: var(--blue)
+        }
+
+        button:hover {
+            filter: brightness(.97)
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 13px
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap
+        }
+
+        .must {
+            background: #e4f7ec;
+            color: #12643b
+        }
+
+        .important {
+            background: #fff2cc;
+            color: #815600
+        }
+
+        .optional {
+            background: #edf0f5;
+            color: #526071
+        }
+
+        .progressrow {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 8px
+        }
+
+        .progress {
+            height: 9px;
+            background: #edf0f5;
+            border-radius: 99px;
+            overflow: hidden
+        }
+
+        .progress>div {
+            height: 100%;
+            width: 0;
+            background: #2457c5;
+            transition: width .2s
+        }
+
+        .releases {
+            display: grid;
+            gap: 12px
+        }
+
+        .release {
+            overflow: hidden
+        }
+
+        .release-head {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            padding: 15px 16px;
+            cursor: pointer;
+            list-style: none
+        }
+
+        .release-head::-webkit-details-marker {
+            display: none
+        }
+
+        .release-head .version {
+            font-weight: 800;
+            font-size: 17px;
+            min-width: 105px
+        }
+
+        .release-head .sub {
+            color: var(--muted);
+            font-size: 12px;
+            flex: 1
+        }
+
+        .release-head .count {
+            color: var(--muted);
+            font-size: 12px;
+            white-space: nowrap
+        }
+
+        .release[open] .release-head {
+            border-bottom: 1px solid var(--line)
+        }
+
+        .items {
+            padding: 5px 16px 12px
+        }
+
+        .item {
+            display: grid;
+            grid-template-columns: 22px minmax(0, 1fr) auto;
+            gap: 10px;
+            padding: 13px 0;
+            border-bottom: 1px solid #eef0f3;
+            align-items: start
+        }
+
+        .item:last-child {
+            border-bottom: 0
+        }
+
+        .item input {
+            width: 17px;
+            height: 17px;
+            margin-top: 3px;
+            accent-color: var(--blue);
+            cursor: pointer
+        }
+
+        .feature {
+            font-weight: 680
+        }
+
+        .why {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 3px
+        }
+
+        .item.done .feature {
+            text-decoration: line-through;
+            color: #7c8797
+        }
+
+        .empty {
+            text-align: center;
+            padding: 32px;
+            color: var(--muted)
+        }
+
+        .footer {
+            color: var(--muted);
+            font-size: 12px;
+            padding: 16px 2px
+        }
+
+        @media(max-width:800px) {
+            .toolbar {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .toolbar .search {
+                grid-column: 1/-1
+            }
+
+            .summary {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .release-head {
+                flex-wrap: wrap
+            }
+
+            .release-head .version {
+                min-width: 0
+            }
+
+            .release-head .sub {
+                order: 3;
+                flex-basis: 100%
+            }
+        }
+
+        @media(max-width:480px) {
+            .toolbar {
+                grid-template-columns: 1fr
+            }
+
+            .toolbar .search {
+                grid-column: auto
+            }
+
+            .item {
+                grid-template-columns: 22px minmax(0, 1fr)
+            }
+
+            .item .badge {
+                grid-column: 2;
+                justify-self: start
+            }
+
+            .release-head .count {
+                margin-left: auto
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="wrap">
+            <div class="eyebrow">Personal learning plan</div>
+            <h1>Java 9–25 Learning Tracker</h1>
+            <p>Track the Java features that matter for Java and Spring Boot development. Filter by priority or release,
+                search topics, and keep your progress saved in this browser.</p>
+        </div>
+    </header>
+    <main>
+        <section class="summary" aria-label="Progress summary">
+            <div class="stat">
+                <div class="num" id="total">0</div>
+                <div class="label">Total topics</div>
+            </div>
+            <div class="stat">
+                <div class="num" id="done">0</div>
+                <div class="label">Completed</div>
+            </div>
+            <div class="stat">
+                <div class="num" id="must">0</div>
+                <div class="label">Must learn</div>
+            </div>
+            <div class="stat">
+                <div class="num" id="remaining">0</div>
+                <div class="label">Remaining</div>
+            </div>
+        </section>
+        <section class="panel">
+            <div class="progressrow"><strong>Overall progress</strong><span id="progressText">0% complete</span></div>
+            <div class="progress">
+                <div id="progressBar"></div>
+            </div>
+            <div class="legend">
+                <span class="badge must">Must learn</span><span class="badge important">Important</span><span
+                    class="badge optional">Optional</span>
+            </div>
+        </section>
+        <section class="panel">
+            <div class="toolbar">
+                <div class="search"><label for="search">Search features</label><input id="search" type="search"
+                        placeholder="e.g. records, Optional, virtual threads"></div>
+                <div><label for="priority">Priority</label><select id="priority">
+                        <option value="">All priorities</option>
+                        <option>Must learn</option>
+                        <option>Important</option>
+                        <option>Optional</option>
+                    </select></div>
+                <div><label for="release">Java release</label><select id="release">
+                        <option value="">All releases</option>
+                    </select></div>
+                <button id="expandAll">Expand all</button>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
+                <button id="export">Export progress (JSON)</button><button id="reset">Reset checkmarks</button>
+                <label style="display:flex;align-items:center;gap:7px;margin:0 0 0 auto"><input id="showDone"
+                        type="checkbox" checked> Show completed</label>
+            </div>
+            <p style="font-size:12px;color:var(--muted);margin:12px 0 0">Progress is stored in local browser storage on
+                this device. Export a JSON backup before clearing browser data or moving to another device.</p>
+        </section>
+        <section id="releases" class="releases"></section>
+        <div id="empty" class="empty" hidden>No topics match those filters. Try a different search or priority.</div>
+        <div class="footer">Priority labels reflect a practical Java + Spring Boot learning plan. Preview, incubator,
+            and experimental APIs may change; verify their status before using them in production.</div>
+    </main>
+    <script>
+        const DATA = [{ "title": "Java 9", "items": [{ "feature": "List.of(), Set.of(), Map.of()", "priority": "Must learn", "why": "Create small, unmodifiable collections for application logic and configuration." }, { "feature": "Stream takeWhile(), dropWhile(), iterate()", "priority": "Must learn", "why": "Process and transform data using streams." }, { "feature": "Optional.ifPresentOrElse(), or(), stream()", "priority": "Must learn", "why": "Improve optional-value handling and stream pipelines." }, { "feature": "Private methods in interfaces", "priority": "Important", "why": "Understand how interface default methods can share implementation." }, { "feature": "try-with-resources improvements", "priority": "Must learn", "why": "Safely manage resources, including streams and database-related resources." }, { "feature": "CompletableFuture improvements", "priority": "Important", "why": "Useful for asynchronous tasks and parallel external API calls." }, { "feature": "JPMS and module-info.java", "priority": "Important", "why": "Understand modules and encapsulation; most Spring Boot applications still use the classpath." }, { "feature": "JShell", "priority": "Optional", "why": "Quickly experiment with Java expressions and APIs." }, { "feature": "Process API", "priority": "Optional", "why": "Useful when Java must launch or inspect operating-system processes." }, { "feature": "StackWalker", "priority": "Optional", "why": "Mainly useful for framework, diagnostics and advanced stack inspection." }, { "feature": "Reactive Streams / Flow API", "priority": "Important", "why": "Learn the concepts if working with reactive systems; Spring WebFlux typically uses Reactor." }, { "feature": "Diamond operator with anonymous classes", "priority": "Optional", "why": "Rarely a focus in everyday backend development." }, { "feature": "Multi-release JAR files", "priority": "Optional", "why": "Mainly relevant to library authors supporting multiple Java versions." }, { "feature": "Javadoc search and HTML5", "priority": "Optional", "why": "Developer documentation rather than application programming." }] }, { "title": "Java 10", "items": [{ "feature": "var and its rules", "priority": "Must learn", "why": "Reduces verbosity when the type is clear; it is still statically typed." }, { "feature": "copyOf() and unmodifiable collection copies", "priority": "Must learn", "why": "Helps create defensive copies and protect application data." }, { "feature": "Optional.orElseThrow()", "priority": "Must learn", "why": "Commonly used when a value must exist or an exception must be raised." }, { "feature": "Collectors.toUnmodifiableList/Set/Map", "priority": "Important", "why": "Useful when collection immutability is required." }, { "feature": "Garbage Collector interface", "priority": "Optional", "why": "Mostly relevant to JVM internals." }, { "feature": "Application class-data sharing improvements", "priority": "Optional", "why": "Understand only when investigating JVM startup or memory use." }, { "feature": "Thread-local handshake / JVM performance changes", "priority": "Optional", "why": "JVM implementation details, not typical application code." }] }, { "title": "Java 11", "items": [{ "feature": "HttpClient, HttpRequest, HttpResponse", "priority": "Must learn", "why": "Standard Java HTTP client for calling external REST APIs. Spring applications may instead use RestClient, WebClient or other clients." }, { "feature": "HTTP/2 and asynchronous HTTP requests", "priority": "Important", "why": "Useful for external-service communication and concurrency." }, { "feature": "String methods: isBlank(), lines(), strip(), repeat()", "priority": "Must learn", "why": "Simplifies string validation and transformation." }, { "feature": "Files.readString() and writeString()", "priority": "Important", "why": "Convenient file handling for configuration, test fixtures and utilities." }, { "feature": "Predicate.not()", "priority": "Important", "why": "Makes certain stream filters cleaner." }, { "feature": "Optional.isEmpty()", "priority": "Must learn", "why": "Clearer optional-value checks." }, { "feature": "var in lambda parameters", "priority": "Important", "why": "Useful for explicit lambda parameter types and annotations." }, { "feature": "Single-file source execution", "priority": "Optional", "why": "Handy for scripts and quick experiments." }, { "feature": "Nest-based access control", "priority": "Optional", "why": "Mostly JVM/compiler implementation detail." }, { "feature": "TLS 1.3", "priority": "Important", "why": "Understand secure communication and compatible TLS configuration." }, { "feature": "Flight Recorder", "priority": "Important", "why": "Learn how to investigate performance issues in production." }, { "feature": "ZGC and Epsilon GC", "priority": "Optional", "why": "Understand GC choices; do not select a collector without measuring workload needs." }, { "feature": "Java EE and CORBA module removal", "priority": "Important", "why": "Important when migrating legacy Java 8 applications and dependencies." }] }, { "title": "Java 12", "items": [{ "feature": "Switch expressions — preview", "priority": "Important", "why": "Learn the concept; study the finalized Java 14 syntax instead." }, { "feature": "String.indent() and transform()", "priority": "Optional", "why": "Useful for certain text-processing tasks." }, { "feature": "Files.mismatch()", "priority": "Optional", "why": "Useful for comparing files in utilities or tests." }, { "feature": "Compact Number Formatting", "priority": "Optional", "why": "Relevant to user-facing number formatting." }, { "feature": "Collectors.teeing()", "priority": "Important", "why": "Can calculate two collector results in one stream pass." }, { "feature": "Shenandoah GC", "priority": "Optional", "why": "Learn only when JVM GC tuning is relevant to your runtime." }, { "feature": "JVM constants API", "priority": "Optional", "why": "Mostly advanced JVM/library tooling." }] }, { "title": "Java 13", "items": [{ "feature": "Text blocks — preview", "priority": "Important", "why": "Learn the finalized Java 15 text-block syntax." }, { "feature": "Switch expressions — second preview", "priority": "Important", "why": "Learn the finalized Java 14 syntax." }, { "feature": "stripIndent(), translateEscapes(), formatted()", "priority": "Important", "why": "Useful for multiline strings and text processing." }, { "feature": "Dynamic CDS archives", "priority": "Optional", "why": "Mainly useful for JVM startup optimization." }, { "feature": "ZGC memory-uncommit improvements", "priority": "Optional", "why": "JVM performance internals." }, { "feature": "Socket API reimplementation", "priority": "Optional", "why": "Usually transparent to application developers." }] }, { "title": "Java 14", "items": [{ "feature": "Switch expressions — finalized", "priority": "Must learn", "why": "Cleaner business-rule and status handling." }, { "feature": "Records — preview", "priority": "Important", "why": "Learn the finalized Java 16 version for DTO-like data carriers." }, { "feature": "Pattern matching for instanceof — preview", "priority": "Important", "why": "Learn the finalized Java 16 version." }, { "feature": "Text blocks — second preview", "priority": "Important", "why": "Learn the finalized Java 15 version." }, { "feature": "Helpful NullPointerExceptions", "priority": "Must learn", "why": "Makes null-related debugging easier." }, { "feature": "JFR Event Streaming", "priority": "Important", "why": "Useful for diagnostics and performance analysis." }, { "feature": "jpackage", "priority": "Optional", "why": "Relevant to packaging desktop or standalone Java applications." }, { "feature": "Foreign-Memory Access API — incubator", "priority": "Optional", "why": "Advanced native-memory integration." }, { "feature": "CMS GC removal", "priority": "Important", "why": "Relevant when upgrading old JVM configurations." }] }, { "title": "Java 15", "items": [{ "feature": "Text blocks — finalized", "priority": "Must learn", "why": "Useful for multiline SQL, JSON, test payloads and text." }, { "feature": "Sealed classes — preview", "priority": "Important", "why": "Learn the finalized Java 17 version." }, { "feature": "Records — second preview", "priority": "Important", "why": "Learn the finalized Java 16 version." }, { "feature": "Pattern matching for instanceof — second preview", "priority": "Important", "why": "Learn the finalized Java 16 version." }, { "feature": "Hidden classes", "priority": "Optional", "why": "Mainly framework, proxy and bytecode-library internals." }, { "feature": "EdDSA", "priority": "Optional", "why": "Relevant when working with supported cryptographic algorithms and libraries." }, { "feature": "ZGC and Shenandoah production-ready status", "priority": "Optional", "why": "Understand GC options when tuning production JVMs." }, { "feature": "Text-block formatting, escaping and indentation", "priority": "Must learn", "why": "Helps avoid mistakes when embedding structured text." }, { "feature": "Helpful NullPointerExceptions enhancements", "priority": "Must learn", "why": "Useful for debugging." }] }, { "title": "Java 16", "items": [{ "feature": "Records — finalized", "priority": "Must learn", "why": "Great for suitable request/response DTOs and immutable data carriers." }, { "feature": "Pattern matching for instanceof — finalized", "priority": "Must learn", "why": "Simplifies type checks and casts." }, { "feature": "Stream.toList()", "priority": "Must learn", "why": "Common stream operation; note that the returned list is unmodifiable." }, { "feature": "mapMulti()", "priority": "Important", "why": "Useful for specialized stream transformations; less common than map and flatMap." }, { "feature": "Sealed classes — second preview", "priority": "Important", "why": "Learn the finalized Java 17 version." }, { "feature": "Vector API", "priority": "Optional", "why": "Specialized high-performance numerical computation." }, { "feature": "Foreign Linker API", "priority": "Optional", "why": "Advanced native-code integration." }, { "feature": "Unix-domain socket channels", "priority": "Optional", "why": "Relevant to certain local IPC integrations." }, { "feature": "jpackage finalized", "priority": "Optional", "why": "Packaging standalone applications." }, { "feature": "Strong encapsulation of JDK internals", "priority": "Important", "why": "May affect legacy dependencies and reflection during migration." }, { "feature": "JDK source code in Git", "priority": "Optional", "why": "Useful for contributors to the JDK, not a core Spring skill." }] }, { "title": "Java 17 — LTS", "items": [{ "feature": "Sealed classes and interfaces — finalized", "priority": "Must learn", "why": "Restrict which classes may implement or extend a type." }, { "feature": "Pattern matching with instanceof", "priority": "Must learn", "why": "Simplifies application logic." }, { "feature": "Records and immutable data carriers", "priority": "Must learn", "why": "Useful for suitable DTOs and value objects." }, { "feature": "RandomGenerator API", "priority": "Optional", "why": "Specialized random-number generation; security-sensitive code needs secure randomness." }, { "feature": "Enhanced pseudo-random generators", "priority": "Optional", "why": "Useful for specific simulation and algorithm needs." }, { "feature": "Pattern matching for switch — preview", "priority": "Important", "why": "Learn the finalized Java 21 version." }, { "feature": "Foreign Function & Memory API — incubator", "priority": "Optional", "why": "Native interoperation; not typical REST application work." }, { "feature": "Vector API", "priority": "Optional", "why": "Specialized numerical performance." }, { "feature": "Strong encapsulation of JDK internals", "priority": "Important", "why": "Important for migration and dependency compatibility." }, { "feature": "Security Manager deprecated", "priority": "Optional", "why": "Know the implications if maintaining legacy security integrations." }, { "feature": "New macOS rendering pipeline", "priority": "Optional", "why": "Desktop graphics, not normal backend work." }, { "feature": "Always-strict floating-point semantics", "priority": "Optional", "why": "Specialized numerical behavior." }, { "feature": "RMI Activation removal", "priority": "Optional", "why": "Important only for legacy RMI applications." }] }, { "title": "Java 18", "items": [{ "feature": "UTF-8 as the default charset", "priority": "Must learn", "why": "Helps avoid encoding bugs across environments." }, { "feature": "Simple Web Server", "priority": "Optional", "why": "Useful for local experiments, not a replacement for Spring Boot." }, { "feature": "Code snippets in Javadoc", "priority": "Optional", "why": "Helpful when writing libraries and developer documentation." }, { "feature": "Javadoc search improvements", "priority": "Optional", "why": "Documentation tooling." }, { "feature": "Pattern matching for switch — second preview", "priority": "Important", "why": "Learn the finalized Java 21 version." }, { "feature": "Foreign Function & Memory API — second incubator", "priority": "Optional", "why": "Native integration." }, { "feature": "Vector API — third incubator", "priority": "Optional", "why": "Specialized numerical workloads." }, { "feature": "Finalization deprecated for removal", "priority": "Important", "why": "Avoid relying on finalizers for resource management." }, { "feature": "Core reflection reimplementation", "priority": "Optional", "why": "Understand only when investigating deep framework compatibility." }] }, { "title": "Java 19", "items": [{ "feature": "Virtual threads — preview", "priority": "Important", "why": "Learn the finalized Java 21 feature." }, { "feature": "Thread.ofVirtual() and Thread.ofPlatform()", "priority": "Important", "why": "Understand thread creation; use the appropriate executor pattern in applications." }, { "feature": "Thread.Builder and ThreadFactory", "priority": "Important", "why": "Useful for advanced thread management." }, { "feature": "Structured Concurrency — incubator", "priority": "Important", "why": "Learn the concept, but verify its current status before using it." }, { "feature": "Record patterns — preview", "priority": "Important", "why": "Learn the finalized Java 21 feature." }, { "feature": "Pattern matching for switch — third preview", "priority": "Important", "why": "Learn the finalized Java 21 feature." }, { "feature": "Foreign Function & Memory API — preview", "priority": "Optional", "why": "Native interoperability." }, { "feature": "Vector API — fourth incubator", "priority": "Optional", "why": "Specialized computation." }, { "feature": "Linux/RISC-V port", "priority": "Optional", "why": "Platform-specific JDK development." }, { "feature": "Generational ZGC — experimental", "priority": "Optional", "why": "Understand GC evolution; learn current behavior on your target JDK." }] }, { "title": "Java 20", "items": [{ "feature": "Virtual threads — second preview", "priority": "Important", "why": "Learn the finalized Java 21 feature." }, { "feature": "Structured Concurrency — second incubator", "priority": "Important", "why": "Learn the design and its evolving API." }, { "feature": "Scoped Values — incubator", "priority": "Important", "why": "Learn the finalized Java 25 feature and how it differs from ThreadLocal." }, { "feature": "Record patterns — second preview", "priority": "Important", "why": "Learn the finalized Java 21 feature." }, { "feature": "Pattern matching for switch — fourth preview", "priority": "Important", "why": "Learn the finalized Java 21 feature." }, { "feature": "Foreign Function & Memory API — second preview", "priority": "Optional", "why": "Native integration." }, { "feature": "Vector API — fifth incubator", "priority": "Optional", "why": "Specialized computation." }, { "feature": "JFR event improvements", "priority": "Optional", "why": "Useful if doing advanced profiling." }] }, { "title": "Java 21 — LTS", "items": [{ "feature": "Virtual threads — finalized", "priority": "Must learn", "why": "Important for high-concurrency, blocking-I/O workloads." }, { "feature": "Virtual threads, pinning and blocking I/O", "priority": "Must learn", "why": "Helps avoid performance pitfalls and choose the right concurrency approach." }, { "feature": "Record patterns — finalized", "priority": "Important", "why": "Useful for destructuring record data." }, { "feature": "Pattern matching for switch — finalized", "priority": "Must learn", "why": "Cleaner handling of different types and business states." }, { "feature": "Sequenced Collections", "priority": "Important", "why": "Adds consistent first/last and reversed-view operations." }, { "feature": "String templates — preview", "priority": "Optional", "why": "Historical preview only; do not learn it as a stable Java 25 feature." }, { "feature": "Unnamed patterns and variables — preview", "priority": "Important", "why": "Learn the finalized Java 22 version." }, { "feature": "Structured Concurrency — preview", "priority": "Important", "why": "Understand the model; Java 25 still has a preview version." }, { "feature": "Scoped Values — preview", "priority": "Important", "why": "Learn the finalized Java 25 version." }, { "feature": "Foreign Function & Memory API — third preview", "priority": "Optional", "why": "Native integration; finalized in Java 22." }, { "feature": "Generational ZGC — finalized", "priority": "Optional", "why": "Important for specialized JVM tuning, not routine coding." }, { "feature": "Key Encapsulation Mechanism (KEM) API", "priority": "Optional", "why": "Learn when implementing relevant cryptographic systems." }, { "feature": "Multi-file source-code programs", "priority": "Optional", "why": "Convenient for learning and scripts." }, { "feature": "Cryptographic improvements", "priority": "Important", "why": "Understand the security implications when maintaining secure applications." }, { "feature": "Deprecation of 32-bit x86 port", "priority": "Optional", "why": "Relevant to older deployment environments." }, { "feature": "Java 21 migration and compatibility", "priority": "Must learn", "why": "Important when upgrading Java 8 Spring Boot applications." }] }, { "title": "Java 22", "items": [{ "feature": "Foreign Function & Memory API — finalized", "priority": "Optional", "why": "Important for native libraries, not typical Spring REST services." }, { "feature": "Unnamed variables and patterns — finalized", "priority": "Important", "why": "Lets you ignore values you do not need." }, { "feature": "Statements before super() — preview", "priority": "Optional", "why": "Advanced constructor design; not common in service code." }, { "feature": "Stream Gatherers — preview", "priority": "Important", "why": "Learn the concept for advanced custom stream operations." }, { "feature": "Class-File API — preview", "priority": "Optional", "why": "Mainly for bytecode tools and framework/library authors." }, { "feature": "Multi-file source-code programs", "priority": "Optional", "why": "Developer convenience." }, { "feature": "String templates — second preview", "priority": "Optional", "why": "Historical preview; not a stable Java 25 feature." }, { "feature": "Structured Concurrency — second preview", "priority": "Important", "why": "Understand the evolving concurrency model." }, { "feature": "Scoped Values — second preview", "priority": "Important", "why": "Learn the finalized Java 25 feature." }, { "feature": "Vector API — incubator", "priority": "Optional", "why": "Specialized numerical workloads." }, { "feature": "G1 region pinning", "priority": "Optional", "why": "JVM implementation detail." }] }, { "title": "Java 23", "items": [{ "feature": "Stream Gatherers — second preview", "priority": "Important", "why": "Learn the finalized Java 24 API." }, { "feature": "Markdown documentation comments — preview", "priority": "Optional", "why": "Documentation authoring." }, { "feature": "Module import declarations — preview", "priority": "Optional", "why": "Mainly relevant to modular Java code; finalized in Java 25." }, { "feature": "Primitive types in patterns, instanceof and switch — preview", "priority": "Optional", "why": "Advanced language feature; still preview in Java 25." }, { "feature": "Flexible constructor bodies — second preview", "priority": "Important", "why": "Learn the finalized Java 25 version if you write complex constructors." }, { "feature": "Class-File API — second preview", "priority": "Optional", "why": "Bytecode tooling." }, { "feature": "Structured Concurrency — third preview", "priority": "Important", "why": "Understand the model; verify API status on your JDK." }, { "feature": "Scoped Values — third preview", "priority": "Important", "why": "Learn the finalized Java 25 feature." }, { "feature": "Generational ZGC by default", "priority": "Optional", "why": "GC behavior and tuning." }, { "feature": "Vector API — incubator", "priority": "Optional", "why": "Specialized computation." }, { "feature": "Security and cryptography updates", "priority": "Important", "why": "Track security fixes and supported algorithms when upgrading." }] }, { "title": "Java 24", "items": [{ "feature": "Stream Gatherers — finalized", "priority": "Important", "why": "Useful for advanced stream transformations; learn after core Streams." }, { "feature": "Class-File API — second preview", "priority": "Optional", "why": "Bytecode tooling." }, { "feature": "Flexible constructor bodies — third preview", "priority": "Important", "why": "Learn the finalized Java 25 feature." }, { "feature": "Module import declarations — second preview", "priority": "Optional", "why": "Learn only if working with modules or using the new Java 25 syntax." }, { "feature": "Primitive types in patterns and switch — second preview", "priority": "Optional", "why": "Advanced language feature; preview in Java 25." }, { "feature": "Structured Concurrency — fourth preview", "priority": "Important", "why": "Useful conceptually for related concurrent tasks, but not yet a stable Java 25 API." }, { "feature": "Scoped Values — fourth preview", "priority": "Important", "why": "Learn the finalized Java 25 feature." }, { "feature": "Virtual-thread monitor pinning changes", "priority": "Important", "why": "Understand when diagnosing virtual-thread performance." }, { "feature": "Ahead-of-Time class loading and linking", "priority": "Optional", "why": "Relevant to startup optimization." }, { "feature": "Compact Object Headers — experimental", "priority": "Optional", "why": "Advanced memory optimization." }, { "feature": "Generational ZGC improvements", "priority": "Optional", "why": "GC tuning." }, { "feature": "Quantum-resistant cryptography enhancements", "priority": "Optional", "why": "Security specialization." }, { "feature": "Key Derivation Function API", "priority": "Optional", "why": "Learn if implementing cryptographic key derivation." }, { "feature": "Markdown documentation comments — second preview", "priority": "Optional", "why": "Documentation tooling." }] }, { "title": "Java 25 — LTS", "items": [{ "feature": "Module import declarations — finalized", "priority": "Optional", "why": "Primarily relevant to module users and simplifying imports." }, { "feature": "Compact source files and instance main() methods — finalized", "priority": "Optional", "why": "Useful for learning, small programs and simple scripts; regular application entry points remain common." }, { "feature": "Flexible constructor bodies — finalized", "priority": "Important", "why": "Useful when constructor initialization needs more flexibility." }, { "feature": "Primitive types in patterns, instanceof and switch — preview", "priority": "Optional", "why": "Advanced language feature; understand preview restrictions." }, { "feature": "Scoped Values — finalized", "priority": "Important", "why": "Useful for safely sharing contextual values across supported call chains, including relevant concurrent designs." }, { "feature": "Structured Concurrency — fifth preview", "priority": "Important", "why": "Learn the concept, but don't treat the Java 25 API as finalized." }, { "feature": "Stable Values — preview", "priority": "Optional", "why": "Advanced initialization and performance topic." }, { "feature": "AOT command-line ergonomics", "priority": "Optional", "why": "JVM startup optimization." }, { "feature": "AOT method profiling", "priority": "Optional", "why": "Performance optimization." }, { "feature": "JFR CPU-time profiling", "priority": "Important", "why": "Useful for investigating CPU-heavy production issues." }, { "feature": "JFR cooperative sampling", "priority": "Optional", "why": "Advanced profiling." }, { "feature": "Compact Object Headers", "priority": "Optional", "why": "Advanced memory tuning; understand support and configuration before enabling." }, { "feature": "Generational Shenandoah", "priority": "Optional", "why": "GC tuning when supported and relevant." }, { "feature": "Key Derivation Function API", "priority": "Optional", "why": "Cryptography specialization." }, { "feature": "PEM encodings of cryptographic objects", "priority": "Important", "why": "Useful if your application directly handles cryptographic keys and certificates." }, { "feature": "Post-quantum cryptography updates", "priority": "Important", "why": "Security awareness; detailed implementation is specialized." }, { "feature": "Removal of obsolete tools, options and APIs", "priority": "Important", "why": "Important for JDK upgrades and legacy application compatibility." }, { "feature": "Java 25 migration, compatibility and performance tuning", "priority": "Must learn", "why": "Necessary for a safe production upgrade." }] }];
+        const STORAGE_KEY = "java-springboot-learning-tracker-v1";
+        let completed = new Set();
+        try { completed = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]")); } catch (e) { }
+        const $ = id => document.getElementById(id);
+        const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        function allItems() { return DATA.flatMap(s => s.items.map((it, i) => ({ ...it, release: s.title, id: slug(s.title) + "-" + i }))); }
+        function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...completed])); } catch (e) { } }
+        function badgeClass(p) { return p === "Must learn" ? "must" : p === "Important" ? "important" : "optional"; }
+        function updateStats() {
+            const items = allItems(), done = items.filter(x => completed.has(x.id)).length, must = items.filter(x => x.priority === "Must learn").length;
+            $("total").textContent = items.length; $("done").textContent = done; $("must").textContent = must; $("remaining").textContent = items.length - done;
+            const pct = items.length ? Math.round(done / items.length * 100) : 0; $("progressText").textContent = pct + "% complete"; $("progressBar").style.width = pct + "%";
+        }
+        function render() {
+            const q = $("search").value.trim().toLowerCase(), p = $("priority").value, r = $("release").value, showDone = $("showDone").checked;
+            // Keep expanded release sections open when a checkbox triggers a re-render.
+            const previouslyOpen = new Set(
+                [...document.querySelectorAll("details.release")]
+                    .filter(details => details.open)
+                    .map(details => details.dataset.release)
+            );
+            const host = $("releases"); host.innerHTML = "";
+            let visible = 0;
+            DATA.forEach((section, si) => {
+                if (r && section.title !== r) return;
+                const filtered = section.items.map((it, i) => ({ ...it, release: section.title, id: slug(section.title) + "-" + i })).filter(it => {
+                    const matches = (!p || it.priority === p) && (!q || (it.feature + " " + it.why + " " + it.priority + " " + section.title).toLowerCase().includes(q)) && (showDone || !completed.has(it.id));
+                    return matches;
+                });
+                if (!filtered.length) return; visible += filtered.length;
+                const details = document.createElement("details");
+                details.className = "release";
+                details.dataset.release = section.title;
+                details.open = !!(q || p || r) || previouslyOpen.has(section.title);
+                const head = document.createElement("summary"); head.className = "release-head";
+                const version = document.createElement("span"); version.className = "version"; version.textContent = section.title;
+                const sub = document.createElement("span"); sub.className = "sub"; sub.textContent = "Java + Spring Boot relevance";
+                const count = document.createElement("span"); count.className = "count"; const totalDone = section.items.filter((it, i) => completed.has(slug(section.title) + "-" + i)).length; count.textContent = `${totalDone}/${section.items.length} done`;
+                head.append(version, sub, count); details.append(head);
+                const items = document.createElement("div"); items.className = "items";
+                filtered.forEach(it => {
+                    const row = document.createElement("label"); row.className = "item" + (completed.has(it.id) ? " done" : ""); row.htmlFor = "check-" + it.id;
+                    const check = document.createElement("input"); check.type = "checkbox"; check.id = "check-" + it.id; check.checked = completed.has(it.id); check.setAttribute("aria-label", "Mark " + it.feature + " completed");
+                    check.addEventListener("change", () => { if (check.checked) completed.add(it.id); else completed.delete(it.id); save(); render(); });
+                    const content = document.createElement("div"); const feature = document.createElement("div"); feature.className = "feature"; feature.textContent = it.feature; const why = document.createElement("div"); why.className = "why"; why.textContent = it.why; content.append(feature, why);
+                    const b = document.createElement("span"); b.className = "badge " + badgeClass(it.priority); b.textContent = it.priority;
+                    row.append(check, content, b); items.append(row);
+                });
+                details.append(items); host.append(details);
+            });
+            $("empty").hidden = visible > 0; updateStats();
+        }
+        function populateReleases() { DATA.forEach(s => { const o = document.createElement("option"); o.value = s.title; o.textContent = s.title; $("release").append(o); }); }
+        ["search", "priority", "release", "showDone"].forEach(id => $(id).addEventListener(id === "search" ? "input" : "change", render));
+        $("expandAll").addEventListener("click", () => { const ds = [...document.querySelectorAll("details.release")]; const open = ds.some(d => !d.open); ds.forEach(d => d.open = open); $("expandAll").textContent = open ? "Collapse all" : "Expand all"; });
+        $("reset").addEventListener("click", () => { if (confirm("Reset all completed checkmarks? This cannot be undone unless you exported a backup.")) { completed.clear(); save(); render(); } });
+        $("export").addEventListener("click", () => { const payload = { title: "Java 9–25 Learning Tracker", exportedAt: new Date().toISOString(), completed: [...completed], items: allItems().map(it => ({ ...it, done: completed.has(it.id) })) }; const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "java-learning-progress.json"; a.click(); URL.revokeObjectURL(url); });
+        populateReleases(); render();
+    </script>
+</body>
+
+</html>
