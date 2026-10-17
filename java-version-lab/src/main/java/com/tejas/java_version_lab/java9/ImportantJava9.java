@@ -225,7 +225,7 @@ public class ImportantJava9 {
          * Combined result: Customer: Tejas | Order: Java Book
          *
          * The actual completion order of the two tasks
-         * is not guaranteed.
+         * is not guaranteed
          */
 
 
@@ -236,12 +236,12 @@ public class ImportantJava9 {
         /*
          * orTimeout() completes the future exceptionally with
          * TimeoutException if it does not complete within the
-         * specified time.
+         * specified time
          *
-         * It does not automatically stop the underlying work.
+         * It does not automatically stop the underlying work
          *
          * Here the task is deliberately given a very short
-         * timeout to demonstrate timeout handling.
+         * timeout to demonstrate timeout handling
          */
 
         CompletableFuture<String> timeoutFuture =
